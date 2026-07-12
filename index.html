@@ -224,6 +224,22 @@ nav .links a:hover{color:var(--ink)}
 .rung.final{color:var(--ink);border-left-color:var(--accent)}
 .rung.final i{color:var(--accent)}
 
+/* ---------- full inventory ---------- */
+.index{padding:128px 0;border-top:1px solid var(--hairline)}
+.index .head{max-width:640px;margin-bottom:56px}
+.index .head h2{margin:14px 0 16px}
+.idx{display:grid;grid-template-columns:repeat(3,1fr);gap:48px 40px}
+.icol .ih{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.icol .ih i{font-style:normal;font-family:var(--mono);color:var(--accent);font-size:10px;border:1px solid var(--hairline);
+  border-radius:var(--r-pill);padding:2px 8px}
+.icol ul{list-style:none}
+.icol li{padding:6px 0;font-size:13.5px;color:var(--ink-2);border-bottom:1px solid var(--hairline);display:flex;justify-content:space-between;gap:12px}
+.icol li:last-child{border-bottom:none}
+.icol li em{font-style:normal;color:var(--ink-3);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.icol li.hi{color:var(--ink)}
+@media (max-width:900px){.idx{grid-template-columns:1fr;gap:32px}}
+
 /* ---------- stats ---------- */
 .stats{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:72px 0}
 .stats .wrap{display:grid;grid-template-columns:repeat(5,1fr)}
@@ -508,6 +524,79 @@ footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
       <div class="rung reveal" data-i="2"><i>Q3</i>Does the standard library do it? Use it.</div>
       <div class="rung reveal" data-i="3"><i>Q4</i>Can it be one line? One line.</div>
       <div class="rung final reveal" data-i="4"><i>Q5</i>Only then — the minimum that works.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FULL INVENTORY ================= -->
+<section class="index" id="everything">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker reveal">The full inventory</span>
+      <h2 class="reveal" data-i="1">Everything in the <span class="serif">box</span>.</h2>
+      <p class="sub reveal" data-i="2">Two commands install all of it. No add-ons, no tiers — the complete kit, and the knowledge graph routes your agent to the right piece automatically.</p>
+    </div>
+    <div class="idx">
+      <div class="icol reveal">
+        <div class="ih">Laws <i>5</i></div>
+        <ul>
+          <li class="hi">Design law — premium UI, anti-slop banned<em>flagship</em></li>
+          <li>Clean-code law — 250 words per file<em>hook-enforced</em></li>
+          <li>Auth law — rotating tokens, families, grace</li>
+          <li>Structure law — canonical trees per stack</li>
+          <li>Ponytail — the never-write-it-first reflex</li>
+        </ul>
+      </div>
+      <div class="icol reveal" data-i="1">
+        <div class="ih">Commands <i>11</i></div>
+        <ul>
+          <li>/bootstrap · /clarify · /plan · /build</li>
+          <li>/review · /ship — gates &amp; evidence</li>
+          <li>/status · /doctor — health &amp; progress</li>
+          <li class="hi">/learn · /promote — teach it your taste<em>self-learning</em></li>
+          <li>/update — safe, self-healing migration</li>
+        </ul>
+      </div>
+      <div class="icol reveal" data-i="2">
+        <div class="ih">Agents <i>5</i></div>
+        <ul>
+          <li>Architect — plans, never codes<em>Opus</em></li>
+          <li>Builder — executes the contract<em>Sonnet</em></li>
+          <li class="hi">Design-scout — studies premium source in parallel<em>Sonnet</em></li>
+          <li>Learner — ingests your references<em>Sonnet</em></li>
+          <li>Summarizer — digests, cheap &amp; fast<em>Haiku</em></li>
+        </ul>
+      </div>
+      <div class="icol reveal">
+        <div class="ih">Skills &amp; guides <i>16</i></div>
+        <ul>
+          <li>Principal-mind · Loop-engine · Gateway</li>
+          <li class="hi">Living graphics — animated schematics<em>new</em></li>
+          <li>Asset pipeline · Deploy advisor</li>
+          <li>MCP-maker — any site/API → connector</li>
+          <li>Guides: Next.js · FastAPI · Comms · Redis/Celery · RAG</li>
+        </ul>
+      </div>
+      <div class="icol reveal" data-i="1">
+        <div class="ih">Native tools <i>7</i></div>
+        <ul>
+          <li class="hi">SQLite knowledge graph — token-lean rows<em>store.py</em></li>
+          <li>Image → webp compressor</li>
+          <li>Video → frame mill for scroll-scrub</li>
+          <li>Transparent cut — icons without backgrounds</li>
+          <li>ScrollScrub template · 2 guard hooks</li>
+        </ul>
+      </div>
+      <div class="icol reveal" data-i="2">
+        <div class="ih">Media &amp; connectors <i>12+</i></div>
+        <ul>
+          <li class="hi">Gemini Omni Flash · Veo 3.1 — video from a sentence<em>AI media</em></li>
+          <li>Logo &amp; icon generation, light + dark</li>
+          <li>No credentials → paste-prompt, never an error</li>
+          <li>shadcn/ui · Aceternity · ReactBits · MagicUI · Stitch</li>
+          <li>Chrome — the agent verifies in your real browser</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
