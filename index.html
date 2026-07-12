@@ -154,6 +154,32 @@ nav .links a:hover{color:var(--ink)}
 .card p{color:var(--ink-2);font-size:14px;line-height:1.65}
 .card code{font-family:var(--mono);font-size:12.5px;color:var(--ink);background:var(--bg-sunken);border:1px solid var(--hairline);border-radius:6px;padding:2px 7px}
 
+/* ---------- forge (media pipeline) ---------- */
+.forge{padding:128px 0;border-top:1px solid var(--hairline)}
+.forge .head{max-width:640px}
+.forge .head h2{margin:14px 0 16px}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;list-style:none;margin-top:56px}
+.flow li{position:relative;border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--bg-raised);
+  box-shadow:var(--toplight);padding:20px;font-size:13px;color:var(--ink-2);line-height:1.6}
+.flow li .no{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.14em}
+.flow li b{display:block;color:var(--ink);font-weight:600;font-size:14px;margin:10px 0 6px;letter-spacing:-.01em}
+.flow li::after{content:"";position:absolute;right:-24px;top:50%;width:24px;height:1px;background:var(--hairline-2)}
+.flow li:last-child::after{display:none}
+.forge .note{margin-top:32px;color:var(--ink-3);font-size:13.5px;max-width:52em}
+.forge .note code{font-family:var(--mono);font-size:12.5px;color:var(--ink);background:var(--bg-sunken);border:1px solid var(--hairline);border-radius:6px;padding:2px 7px}
+
+/* ---------- ponytail ladder ---------- */
+.pony{padding:128px 0;border-top:1px solid var(--hairline)}
+.pony .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,96px);align-items:center}
+.pony h2{margin:14px 0 16px}
+.ladder{display:flex;flex-direction:column}
+.rung{display:flex;gap:16px;padding:15px 0 15px 20px;border-left:1px solid var(--hairline);color:var(--ink-2);font-size:15px}
+.rung i{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--ink-3);padding-top:4px;letter-spacing:.1em}
+.rung[data-i="1"]{margin-left:20px}.rung[data-i="2"]{margin-left:40px}
+.rung[data-i="3"]{margin-left:60px}.rung[data-i="4"]{margin-left:80px}
+.rung.final{color:var(--ink);border-left-color:var(--accent)}
+.rung.final i{color:var(--accent)}
+
 /* ---------- stats ---------- */
 .stats{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:72px 0}
 .stats .wrap{display:grid;grid-template-columns:repeat(5,1fr)}
@@ -191,6 +217,10 @@ footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
   .dots{display:none}
   .stage{height:min(420px,52vh)}
   .bento{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr;gap:16px}
+  .flow li::after{right:auto;left:28px;top:auto;bottom:-16px;width:1px;height:16px}
+  .pony .wrap{grid-template-columns:1fr}
+  .rung[data-i]{margin-left:0}
   .stats .wrap{grid-template-columns:repeat(2,1fr);gap:32px 0}
   .stat{border-left:none}
   .stats .wrap .stat:nth-child(even){border-left:1px solid var(--hairline)}
@@ -218,6 +248,7 @@ footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
   <div class="links">
     <a href="#story-anchor">How it works</a>
     <a href="#features">The laws</a>
+    <a href="#forge">The forge</a>
     <a href="https://github.com/INERATE/atelier/blob/main/docs/REQUIREMENTS.md">Docs</a>
   </div>
   <a class="btn btn-primary" href="https://github.com/INERATE/atelier">
@@ -363,9 +394,55 @@ footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
       <div class="card reveal" data-i="1"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span><h3>Clean-Code Law</h3><span class="tag">Hook</span></div><p>Every source file budgeted at <code>250 words</code> — enforced by a pre-write hook, not a review comment. Bloat physically cannot land. The framework's own CI holds itself to the same cap.</p></div>
       <div class="card reveal" data-i="2"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m13.5-6.5L14 8m-4 8l-2.5 2.5m9 0L14 16m-4-8L7.5 5.5"/><circle cx="12" cy="12" r="3.5"/></svg></span><h3>Knowledge Graph</h3><span class="tag">SQLite</span></div><p>A local <code>atelier.db</code> maps every topic to its law: ask about a bug, get principal-mind; ask about video, get the asset pipeline. Agents query it instead of guessing — zero token waste on wrong context.</p></div>
       <div class="card reveal"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8m-4-3v3M7 9l3 3-3 3"/></svg></span><h3>Self-learning</h3><span class="tag">Learn</span></div><p>Paste a screenshot of any design you admire — <code>/atelier:learn</code> distills it into an overlay that extends the law for your project. Promote it, and it becomes permanent, git-tracked taste.</p></div>
-      <div class="card reveal" data-i="1"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="6 3 20 12 6 21"/></svg></span><h3>Media Pipeline</h3><span class="tag">Omni · Veo</span></div><p>Native image→webp compression, video frame-scrub scaffolding, and AI video generation via Gemini Omni Flash or Veo 3.1. No credentials? It degrades to a paste-ready prompt — never an error.</p></div>
-      <div class="card reveal" data-i="2"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><h3>MCP Registry</h3><span class="tag">Extend</span></div><p>shadcn/ui, Aceternity, ReactBits and more, queried live so components come from real registries — never hallucinated. And <code>mcp-maker</code> turns any site or API you love into a new integration.</p></div>
+      <div class="card reveal" data-i="1"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="6 3 20 12 6 21"/></svg></span><h3>Media Pipeline</h3><span class="tag">Omni · Veo</span></div><p>AI video via Gemini Omni Flash / Veo 3.1, image→webp milling, frame-scrub scaffolding — and icon marks cut to true transparency locally, since no image model can. No credentials? A paste-ready prompt, never an error.</p></div>
+      <div class="card reveal" data-i="2"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><h3>MCP Registry</h3><span class="tag">Extend</span></div><p>shadcn/ui, Aceternity, ReactBits queried live — components come from real registries, never hallucinated. The Chrome connector lets the agent drive your actual browser to verify what it built. <code>mcp-maker</code> turns any site or API into a new connector.</p></div>
     </div>
+  </div>
+</section>
+
+<!-- ================= FORGE ================= -->
+<section class="forge dotgrid" id="forge">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker reveal">The media forge</span>
+      <h2 class="reveal" data-i="1">How a page like this gets <span class="serif">made</span>.</h2>
+      <p class="sub reveal" data-i="2">Scrollytelling needs film. Atelier generates it, mills it into frames, and wires the scroll — one pipeline, no video editor, no designer on call.</p>
+    </div>
+    <ol class="flow">
+      <li class="reveal"><span class="no">01 — PROMPT</span><b>You describe one scene.</b>A sentence: the object, the mood, the camera move. That's the whole brief.</li>
+      <li class="reveal" data-i="1"><span class="no">02 — GENERATE</span><b>Omni / Veo renders the film.</b>Gemini Omni Flash or Veo 3.1 — and if you have no credentials, it writes you a paste-ready prompt for the Gemini app instead. Never an error.</li>
+      <li class="reveal" data-i="2"><span class="no">03 — MILL</span><b>Film becomes frames.</b><code>assets.py frames</code> turns the mp4 into a webp sequence, compressed and manifest-tracked.</li>
+      <li class="reveal" data-i="3"><span class="no">04 — WIRE</span><b>Frames meet the scroll.</b>The scroll-scrub scene binds the sequence to your thumb — reversible, buttery, reduced-motion safe.</li>
+      <li class="reveal" data-i="4"><span class="no">05 — GATE</span><b>Design law signs off.</b>One hero moment per page, one accent, no slop — or it goes back to step one.</li>
+    </ol>
+    <p class="note reveal">The same forge draws <b style="color:var(--ink-2)">icons and logo marks</b>: generated flat by the image models, then <code>assets.py cut</code> strips the background into a true transparent asset — locally, free, no API. (No image model can output real transparency. Atelier knows that, and routes around it.)</p>
+  </div>
+</section>
+
+<!-- ================= PONYTAIL ================= -->
+<section class="pony">
+  <div class="wrap">
+    <div>
+      <span class="kicker reveal">The ponytail reflex</span>
+      <h2 class="reveal" data-i="1">The best code is the code <span class="serif">never written</span>.</h2>
+      <p class="sub reveal" data-i="2">Before every single line, the agent interrogates itself — silently, every time, on a descending ladder. It stops at the first rung that holds. You never see the questions. You just get less code, fewer dependencies, and nothing to maintain that didn't need to exist.</p>
+    </div>
+    <div class="ladder">
+      <div class="rung reveal" data-i="0"><i>Q1</i>Does this need to exist at all?</div>
+      <div class="rung reveal" data-i="1"><i>Q2</i>Does the codebase already have it? Reuse it.</div>
+      <div class="rung reveal" data-i="2"><i>Q3</i>Does the standard library do it? Use it.</div>
+      <div class="rung reveal" data-i="3"><i>Q4</i>Can it be one line? One line.</div>
+      <div class="rung final reveal" data-i="4"><i>Q5</i>Only then — the minimum that works.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONNECTORS ================= -->
+<section class="proof">
+  <div class="wrap reveal" style="color:var(--ink-3)">
+    <span style="color:var(--accent)">Connectors — chosen for you, per task</span>
+    <span><b>Chrome</b> — sees what it built</span><span><b>shadcn/ui</b></span><span><b>Aceternity</b></span>
+    <span><b>ReactBits</b></span><span><b>Gemini Omni · Veo</b></span><span><b>GitHub</b></span>
   </div>
 </section>
 
