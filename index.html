@@ -9,7 +9,7 @@
 <meta property="og:description" content="Done-state contracts. Design law. Auto model routing. Self-learning taste. One install for Claude Code.">
 <meta property="og:image" content="https://inerate.github.io/assets/atelier.png">
 <meta property="og:url" content="https://inerate.github.io">
-<link rel="icon" type="image/png" href="assets/atelier.png">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
@@ -157,21 +157,46 @@ nav .links a:hover{color:var(--ink)}
 /* ---------- living schematic ---------- */
 .live{position:relative;border:1px solid var(--hairline);border-radius:var(--r-modal);background:var(--bg-raised);
   box-shadow:var(--toplight);padding:clamp(20px,4vw,40px);margin-bottom:16px;overflow:hidden}
-.live svg{width:100%;height:auto;display:block}
+.live > svg{width:100%;height:auto;display:block}
 .live .node{fill:none;stroke:var(--hairline-2);stroke-width:1.5}
-.live .node.hot{stroke:var(--accent);animation:pulse 3.2s var(--ease) infinite}
 .live .wire{fill:none;stroke:var(--hairline-2);stroke-width:1.5;stroke-dasharray:3 7;animation:flow 1.4s linear infinite}
-.live .pkt{fill:var(--accent);animation:travel 4.2s linear infinite}
-.live .pkt.d1{animation-delay:1.4s}.live .pkt.d2{animation-delay:2.8s}
 .live .t{font:600 11px Inter,sans-serif;letter-spacing:.14em;fill:var(--ink)}
 .live .s{font:500 9.5px Inter,sans-serif;letter-spacing:.12em;fill:var(--ink-3)}
 .live .m{font:500 10px var(--mono);fill:var(--ink-2)}
-.live .ok{stroke:var(--accent);stroke-width:1.5;fill:none}
+.live .pkt{fill:var(--accent);opacity:0}
+.live .ok{stroke:var(--accent);stroke-width:1.5;fill:none;stroke-dasharray:20;stroke-dashoffset:20}
 .livecap{margin-top:20px;font-size:12.5px;color:var(--ink-3);display:flex;gap:8px;align-items:center}
 .livecap b{color:var(--ink-2);font-weight:500}
+/* master timeline — every element shares one 8s cycle, staged by keyframe windows */
+.live .box-a{animation:boxA 8s linear infinite}
+.live .box-b{animation:boxB 8s linear infinite}
+.live .box-c{animation:boxC 8s linear infinite}
+.live .node.hot{animation:shipOn 8s linear infinite}
+.live .ship-t{animation:shipTxt 8s linear infinite}
+.live .pkt.a{animation:tripA 8s linear infinite}
+.live .pkt.b{animation:tripB 8s linear infinite}
+.live .pkt.c{animation:tripC 8s linear infinite}
+.live .m.r1{animation:rowA 8s linear infinite}
+.live .m.r2{animation:rowB 8s linear infinite}
+.live .m.r3{animation:rowC 8s linear infinite}
+.live .ok.g1{animation:chk1 8s linear infinite}
+.live .ok.g2{animation:chk2 8s linear infinite}
+.live .ok.g3{animation:chk3 8s linear infinite}
 @keyframes flow{to{stroke-dashoffset:-10}}
-@keyframes travel{0%{offset-distance:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{offset-distance:100%;opacity:0}}
-@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+@keyframes tripA{0%{offset-distance:0%;opacity:0}2%{opacity:1}14%{offset-distance:100%;opacity:1}16%,100%{offset-distance:100%;opacity:0}}
+@keyframes tripB{0%,42%{offset-distance:0%;opacity:0}44%{opacity:1}56%{offset-distance:100%;opacity:1}58%,100%{offset-distance:100%;opacity:0}}
+@keyframes tripC{0%,74%{offset-distance:0%;opacity:0}76%{opacity:1}82%{offset-distance:100%;opacity:1}84%,100%{offset-distance:100%;opacity:0}}
+@keyframes boxA{0%,12%{stroke:var(--accent)}18%,100%{stroke:var(--hairline-2)}}
+@keyframes boxB{0%,16%{stroke:var(--hairline-2)}20%,46%{stroke:var(--accent)}54%,100%{stroke:var(--hairline-2)}}
+@keyframes boxC{0%,56%{stroke:var(--hairline-2)}60%,72%{stroke:var(--accent)}78%,100%{stroke:var(--hairline-2)}}
+@keyframes rowA{0%,18%{fill:var(--ink-2)}22%,46%{fill:var(--ink)}52%,100%{fill:var(--ink-2)}}
+@keyframes rowB{0%,26%{fill:var(--ink-2)}30%,46%{fill:var(--ink)}52%,100%{fill:var(--ink-2)}}
+@keyframes rowC{0%,34%{fill:var(--ink-2)}38%,46%{fill:var(--ink)}52%,100%{fill:var(--ink-2)}}
+@keyframes chk1{0%,58%{stroke-dashoffset:20}64%,94%{stroke-dashoffset:0}98%,100%{stroke-dashoffset:20}}
+@keyframes chk2{0%,63%{stroke-dashoffset:20}69%,94%{stroke-dashoffset:0}98%,100%{stroke-dashoffset:20}}
+@keyframes chk3{0%,68%{stroke-dashoffset:20}74%,94%{stroke-dashoffset:0}98%,100%{stroke-dashoffset:20}}
+@keyframes shipOn{0%,82%{stroke:var(--hairline-2)}86%,94%{stroke:var(--accent)}100%{stroke:var(--hairline-2)}}
+@keyframes shipTxt{0%,82%{fill:var(--ink-2)}86%,94%{fill:var(--accent)}100%{fill:var(--ink-2)}}
 
 /* ---------- forge (media pipeline) ---------- */
 .forge{padding:128px 0;border-top:1px solid var(--hairline)}
@@ -249,6 +274,7 @@ footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
   *{animation:none!important;transition:none!important}
   .reveal,.chip,.crit,.stamp{opacity:1;transform:none}
   .live .pkt{display:none}
+  .live .ok{stroke-dashoffset:0}
   #story{height:auto}
   #story .stick{position:static;height:auto;display:block;padding:96px 0}
   .story-grid{display:block}
@@ -412,29 +438,29 @@ footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
     <div class="live reveal tick-tl tick-br" aria-label="Animated schematic: a prompt flows through model routing and review gates to ship">
       <svg viewBox="0 0 820 210" role="img">
         <!-- nodes -->
-        <rect class="node" x="16" y="75" width="130" height="60" rx="8"/>
+        <rect class="node box-a" x="16" y="75" width="130" height="60" rx="8"/>
         <text class="t" x="46" y="101">PROMPT</text>
         <text class="s" x="34" y="119">ONE SENTENCE</text>
-        <rect class="node" x="266" y="45" width="170" height="120" rx="8"/>
+        <rect class="node box-b" x="266" y="45" width="170" height="120" rx="8"/>
         <text class="s" x="292" y="68">AUTO ROUTE</text>
-        <text class="m" x="292" y="93">OPUS&#8201;&#8201;&#8212; plans</text>
-        <text class="m" x="292" y="115">SONNET — builds</text>
-        <text class="m" x="292" y="137">HAIKU&#8201;&#8201;— digests</text>
-        <rect class="node" x="556" y="60" width="130" height="90" rx="8"/>
+        <text class="m r1" x="292" y="93">OPUS&#8201;&#8201;&#8212; plans</text>
+        <text class="m r2" x="292" y="115">SONNET — builds</text>
+        <text class="m r3" x="292" y="137">HAIKU&#8201;&#8201;— digests</text>
+        <rect class="node box-c" x="556" y="60" width="130" height="90" rx="8"/>
         <text class="s" x="580" y="83">REVIEW GATES</text>
-        <path class="ok" d="M577 96l4 4 7-8"/><text class="m" x="596" y="102">design law</text>
-        <path class="ok" d="M577 116l4 4 7-8"/><text class="m" x="596" y="122">250 words</text>
-        <path class="ok" d="M577 136l4 4 7-8"/><text class="m" x="596" y="142">ponytail</text>
+        <path class="ok g1" d="M577 96l4 4 7-8"/><text class="m" x="596" y="102">design law</text>
+        <path class="ok g2" d="M577 116l4 4 7-8"/><text class="m" x="596" y="122">250 words</text>
+        <path class="ok g3" d="M577 136l4 4 7-8"/><text class="m" x="596" y="142">ponytail</text>
         <rect class="node hot" x="736" y="75" width="70" height="60" rx="8"/>
-        <text class="t" x="753" y="110" fill="var(--accent)" style="fill:var(--accent)">SHIP</text>
+        <text class="t ship-t" x="753" y="110">SHIP</text>
         <!-- wires -->
         <path class="wire" d="M146 105 H266"/>
         <path class="wire" d="M436 105 H556"/>
         <path class="wire" d="M686 105 H736"/>
-        <!-- packets -->
-        <circle class="pkt" r="3.5" style="offset-path:path('M146 105 H266')"/>
-        <circle class="pkt d1" r="3.5" style="offset-path:path('M436 105 H556')"/>
-        <circle class="pkt d2" r="3.5" style="offset-path:path('M686 105 H736')"/>
+        <!-- packets, staged on the shared 8s timeline -->
+        <circle class="pkt a" r="3.5" style="offset-path:path('M146 105 H266')"/>
+        <circle class="pkt b" r="3.5" style="offset-path:path('M436 105 H556')"/>
+        <circle class="pkt c" r="3.5" style="offset-path:path('M686 105 H736')"/>
       </svg>
       <div class="livecap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg><span>This diagram is <b>alive</b> — no video, no Rive, no library. ~40 lines of inline SVG + CSS from Atelier's <b>living-graphics</b> skill. Your agent learns to build these.</span></div>
     </div>
