@@ -127,8 +127,8 @@ nav .links a:hover{color:var(--ink)}
 .modelrow{display:grid;grid-template-columns:76px 84px 1fr 44px;gap:12px;align-items:center;padding:10px 0;font-family:var(--mono);font-size:13px}
 .modelrow .name{font-weight:600;font-family:Inter,sans-serif}
 .modelrow .role{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-family:Inter,sans-serif}
-.modelrow .track{height:6px;background:var(--bg-sunken);border-radius:3px;overflow:hidden}
-.modelrow .fill{height:100%;width:0;border-radius:3px;background:var(--ink-3);transition:width .1s linear}
+.modelrow .track{display:block;height:6px;background:var(--bg-sunken);border:1px solid var(--hairline);border-radius:3px;overflow:hidden}
+.modelrow .fill{display:block;height:100%;width:0;border-radius:3px;background:var(--ink-3);transition:width .1s linear}
 .modelrow.hot .fill{background:var(--accent)}
 .modelrow .x{color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
 .gate{display:flex;align-items:center;gap:12px;padding:9px 0;color:var(--ink-2)}
