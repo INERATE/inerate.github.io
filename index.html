@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier — the craftsman's framework for AI-built software</title>
+<meta name="description" content="Atelier turns AI coding agents into disciplined principal engineers: done-state contracts, design law, 250-word files, auto model routing, self-learning taste. One install.">
+<meta property="og:title" content="Atelier — ship like a principal engineer">
+<meta property="og:description" content="Done-state contracts. Design law. Auto model routing. Self-learning taste. One install for Claude Code.">
+<meta property="og:image" content="https://inerate.github.io/assets/atelier.png">
+<meta property="og:url" content="https://inerate.github.io">
+<link rel="icon" type="image/png" href="assets/atelier.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens (theming centralized — flip here, nowhere else) ---------- */
+:root{
+  --bg:#0A0A0B; --bg-raised:#141518; --bg-sunken:#060607;
+  --ink:#F5F5F3; --ink-2:#9B9B98; --ink-3:#5C5C5A;
+  --hairline:rgba(255,255,255,.08); --hairline-2:rgba(255,255,255,.14);
+  --accent:#25BE74; --accent-ink:#06130C;
+  --toplight:0 1px 0 rgba(255,255,255,.04) inset;
+  --r-card:12px; --r-modal:16px; --r-pill:999px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--accent);color:var(--accent-ink)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400}
+h1,h2{font-weight:600;letter-spacing:-.02em;line-height:1.05}
+h1{font-size:clamp(3rem,8vw,6.5rem)}
+h2{font-size:clamp(2rem,4.5vw,3.25rem)}
+.sub{color:var(--ink-2);font-size:clamp(1.05rem,1.6vw,1.25rem);line-height:1.55;max-width:34em}
+.dotgrid{background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1px);background-size:24px 24px}
+section{position:relative}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal[data-i="1"]{transition-delay:.07s}.reveal[data-i="2"]{transition-delay:.14s}
+.reveal[data-i="3"]{transition-delay:.21s}.reveal[data-i="4"]{transition-delay:.28s}
+.reveal[data-i="5"]{transition-delay:.35s}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:20px;
+  padding:10px 10px 10px 18px;border:1px solid var(--hairline);border-radius:var(--r-pill);
+  background:rgba(10,10,11,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  transition:box-shadow .3s var(--ease),border-color .3s var(--ease)}
+nav.scrolled{border-color:var(--hairline-2);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.22em;font-size:13px}
+nav .brand svg{display:block}
+nav .links{display:flex;gap:18px;font-size:13.5px;color:var(--ink-2)}
+nav .links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-pill);font-size:13.5px;font-weight:500;
+  padding:8px 16px;transition:all .2s var(--ease);cursor:pointer;border:1px solid transparent}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:var(--bg)}
+.btn-primary:hover{background:var(--accent);color:var(--accent-ink)}
+.btn-ghost{border-color:var(--hairline-2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink-2)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;display:flex;align-items:center;padding:140px 0 96px;overflow:hidden}
+.hero .glow{position:absolute;inset:0;background:radial-gradient(ellipse 50% 38% at 50% 18%,rgba(37,190,116,.10),transparent 70%);pointer-events:none}
+.hero .wrap{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:28px}
+.hero h1 .serif{color:var(--accent)}
+.cmdbox{display:flex;flex-direction:column;gap:0;border:1px solid var(--hairline);border-radius:var(--r-card);
+  background:var(--bg-sunken);box-shadow:var(--toplight);font-family:var(--mono);font-size:14px;min-width:min(560px,90vw);text-align:left;position:relative}
+.cmdbox .bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--hairline);color:var(--ink-3);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-family:Inter,sans-serif}
+.cmdbox .bar i{width:9px;height:9px;border-radius:50%;border:1px solid var(--hairline-2);display:inline-block}
+.cmdbox .lines{padding:16px 14px;display:flex;flex-direction:column;gap:8px}
+.cmdbox .lines span{color:var(--ink-2)}.cmdbox .lines b{color:var(--ink);font-weight:500}
+.cmdbox .copy{position:absolute;right:10px;top:8px;background:none;border:1px solid var(--hairline);border-radius:8px;color:var(--ink-3);
+  padding:4px 10px;font-size:11px;font-family:Inter,sans-serif;cursor:pointer;transition:all .2s}
+.cmdbox .copy:hover{color:var(--ink);border-color:var(--ink-3)}
+.scrollcue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:var(--ink-3);font-size:11px;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px}
+.scrollcue::after{content:"";width:1px;height:36px;background:linear-gradient(var(--ink-3),transparent);animation:cue 2s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- proof strip ---------- */
+.proof{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:20px 0}
+.proof .wrap{display:flex;justify-content:center;gap:clamp(18px,4vw,48px);flex-wrap:wrap;color:var(--ink-3);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.proof b{color:var(--ink-2);font-weight:500}
+
+/* ---------- scrollytelling ---------- */
+#story{height:640vh}
+#story .stick{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.story-grid{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:clamp(32px,6vw,96px);align-items:center;width:100%}
+.rail{position:relative}
+.rail .step{position:absolute;inset:auto 0;top:50%;transform:translateY(calc(-50% + 28px));opacity:0;transition:opacity .5s var(--ease),transform .5s var(--ease);pointer-events:none}
+.rail .step.on{opacity:1;transform:translateY(-50%)}
+.rail .step .kicker{color:var(--accent);margin-bottom:14px;display:block}
+.rail .step h2{margin-bottom:14px}
+.rail .step p{color:var(--ink-2);max-width:30em}
+.dots{position:absolute;left:-40px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--ink-3);opacity:.4;transition:all .3s}
+.dots i.on{background:var(--accent);opacity:1;transform:scale(1.4)}
+.stage{position:relative;height:min(560px,72vh)}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px) scale(.985);
+  transition:opacity .5s var(--ease),transform .5s var(--ease);pointer-events:none}
+.scene.on{opacity:1;transform:none}
+.panel{width:100%;max-width:560px;border:1px solid var(--hairline);border-radius:var(--r-modal);background:var(--bg-raised);
+  box-shadow:var(--toplight),0 24px 64px rgba(0,0,0,.45);overflow:hidden;position:relative}
+.panel .ptitle{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--hairline);font-size:12px;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase}
+.panel .ptitle svg{color:var(--ink-3)}
+.panel .pbody{padding:22px;font-family:var(--mono);font-size:13.5px;line-height:1.8}
+.tick-tl::before,.tick-br::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--hairline-2);border-style:solid;pointer-events:none}
+.tick-tl::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
+.tick-br::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+.caret{display:inline-block;width:8px;height:16px;background:var(--accent);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.chip{display:inline-block;border:1px solid var(--hairline-2);border-radius:var(--r-pill);padding:6px 14px;font-size:12.5px;
+  font-family:Inter,sans-serif;color:var(--ink-2);margin:0 8px 10px 0;opacity:0;transform:translateY(10px);transition:all .45s var(--ease)}
+.chip.in{opacity:1;transform:none}
+.crit{display:flex;align-items:center;gap:10px;padding:7px 0;color:var(--ink-2);opacity:0;transform:translateX(-8px);transition:all .4s var(--ease)}
+.crit.in{opacity:1;transform:none}
+.crit .box{width:15px;height:15px;border:1px solid var(--hairline-2);border-radius:4px;flex:none;position:relative;transition:all .3s}
+.crit.ok{color:var(--ink)}
+.crit.ok .box{background:var(--accent);border-color:var(--accent)}
+.crit.ok .box::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid var(--accent-ink);border-width:0 1.5px 1.5px 0;transform:rotate(42deg)}
+.modelrow{display:grid;grid-template-columns:76px 84px 1fr 44px;gap:12px;align-items:center;padding:10px 0;font-family:var(--mono);font-size:13px}
+.modelrow .name{font-weight:600;font-family:Inter,sans-serif}
+.modelrow .role{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-family:Inter,sans-serif}
+.modelrow .track{height:6px;background:var(--bg-sunken);border-radius:3px;overflow:hidden}
+.modelrow .fill{height:100%;width:0;border-radius:3px;background:var(--ink-3);transition:width .1s linear}
+.modelrow.hot .fill{background:var(--accent)}
+.modelrow .x{color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+.gate{display:flex;align-items:center;gap:12px;padding:9px 0;color:var(--ink-2)}
+.gate svg{flex:none}
+.gate .ring{stroke:var(--hairline-2)}
+.gate .mark{stroke:var(--accent);stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .1s linear}
+.stamp{position:absolute;right:22px;bottom:20px;border:1.5px solid var(--accent);color:var(--accent);border-radius:8px;
+  padding:6px 14px;font:600 12px/1 Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;transform:rotate(-6deg) scale(1.6);opacity:0;transition:all .35s var(--ease)}
+.stamp.in{opacity:1;transform:rotate(-6deg) scale(1)}
+
+/* ---------- bento ---------- */
+.features{padding:128px 0}
+.features .head{max-width:640px;margin-bottom:56px}
+.features .head h2{margin:14px 0 16px}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{position:relative;border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--bg-raised);
+  box-shadow:var(--toplight);padding:24px;transition:transform .25s var(--ease),border-color .25s var(--ease)}
+.card:hover{transform:translateY(-2px);border-color:var(--hairline-2)}
+.card .ichead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.card .icbox{width:36px;height:36px;border:1px solid var(--hairline);border-radius:9px;display:grid;place-items:center;color:var(--ink-2)}
+.card h3{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.card .tag{margin-left:auto;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--hairline);border-radius:var(--r-pill);padding:3px 9px}
+.card p{color:var(--ink-2);font-size:14px;line-height:1.65}
+.card code{font-family:var(--mono);font-size:12.5px;color:var(--ink);background:var(--bg-sunken);border:1px solid var(--hairline);border-radius:6px;padding:2px 7px}
+
+/* ---------- stats ---------- */
+.stats{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:72px 0}
+.stats .wrap{display:grid;grid-template-columns:repeat(5,1fr)}
+.stat{text-align:center;padding:0 12px;border-left:1px solid var(--hairline)}
+.stat:first-child{border-left:none}
+.stat .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:clamp(2.4rem,4.5vw,3.6rem);line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .l{margin-top:8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- CTA ---------- */
+.cta{background:var(--accent);color:var(--accent-ink);padding:104px 0;text-align:center}
+.cta .kicker{color:rgba(6,19,12,.55)}
+.cta h2{margin:14px 0 12px}
+.cta p{color:rgba(6,19,12,.7);max-width:34em;margin:0 auto 32px}
+.cta .cmdbox{margin:0 auto 28px;background:rgba(6,19,12,.92);border-color:rgba(6,19,12,.3)}
+.cta .btn-primary{background:var(--accent-ink);color:var(--accent)}
+.cta .btn-primary:hover{background:#0B241715}
+
+/* ---------- footer ---------- */
+footer{padding:64px 0 48px}
+footer .wrap{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+footer .brandcol{display:flex;flex-direction:column;gap:12px;color:var(--ink-3);font-size:13px}
+footer .brandcol .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:600;letter-spacing:.22em;font-size:13px}
+footer .cols{display:flex;gap:64px}
+footer .col{display:flex;flex-direction:column;gap:10px;font-size:13.5px}
+footer .col b{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:4px}
+footer .col a{color:var(--ink-2)}footer .col a:hover{color:var(--ink)}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  nav .links{display:none}
+  .story-grid{grid-template-columns:1fr;gap:20px;align-content:center}
+  .rail{height:190px}
+  .rail .step h2{font-size:1.5rem}
+  .rail .step p{font-size:14px}
+  .dots{display:none}
+  .stage{height:min(420px,52vh)}
+  .bento{grid-template-columns:1fr}
+  .stats .wrap{grid-template-columns:repeat(2,1fr);gap:32px 0}
+  .stat{border-left:none}
+  .stats .wrap .stat:nth-child(even){border-left:1px solid var(--hairline)}
+}
+/* ---------- reduced motion: story becomes stacked, everything visible ---------- */
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal,.chip,.crit,.stamp{opacity:1;transform:none}
+  #story{height:auto}
+  #story .stick{position:static;height:auto;display:block;padding:96px 0}
+  .story-grid{display:block}
+  .rail .step{position:static;opacity:1;transform:none;margin-bottom:24px}
+  .scene{position:static;opacity:1;transform:none;margin-bottom:32px}
+  .stage{height:auto}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="#top" aria-label="Atelier">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="15" height="15" stroke="var(--ink)" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" fill="var(--accent)"/></svg>
+    ATELIER
+  </a>
+  <div class="links">
+    <a href="#story-anchor">How it works</a>
+    <a href="#features">The laws</a>
+    <a href="https://github.com/INERATE/atelier/blob/main/docs/REQUIREMENTS.md">Docs</a>
+  </div>
+  <a class="btn btn-primary" href="https://github.com/INERATE/atelier">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-1.94c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.18a11 11 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.25 5.66.41.36.78 1.05.78 2.13v3.16c0 .3.2.67.8.55A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+    Star
+  </a>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero dotgrid" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <span class="kicker reveal">An INERATE project · MIT · open source</span>
+    <h1 class="reveal" data-i="1">Ship like a<br><span class="serif">principal</span> engineer.</h1>
+    <p class="sub reveal" data-i="2">Atelier is a framework for Claude Code that gives AI agents what they're missing: a definition of <em>done</em>, a law for <em>good</em>, and the discipline to <em>stop</em>.</p>
+    <div class="cmdbox reveal" data-i="3">
+      <div class="bar"><i></i><i></i><i></i>&nbsp;claude code</div>
+      <button class="copy" data-copy="/plugin marketplace add INERATE/atelier
+/plugin install atelier">copy</button>
+      <div class="lines">
+        <div><span>&gt;</span> <b>/plugin marketplace add INERATE/atelier</b></div>
+        <div><span>&gt;</span> <b>/plugin install atelier</b></div>
+      </div>
+    </div>
+    <div class="reveal" data-i="4" style="display:flex;gap:12px">
+      <a class="btn btn-primary" href="https://github.com/INERATE/atelier">View on GitHub</a>
+      <a class="btn btn-ghost" href="#story-anchor">See how it works</a>
+    </div>
+  </div>
+  <div class="scrollcue">Scroll</div>
+</section>
+
+<!-- ================= PROOF ================= -->
+<section class="proof">
+  <div class="wrap reveal">
+    <span><b>21</b> skills</span><span><b>5</b> agents</span><span><b>2</b> hooks</span>
+    <span><b>SQLite</b> knowledge graph</span><span><b>~1.7k</b> tokens always-on</span><span><b>1</b> install</span>
+  </div>
+</section>
+
+<!-- ================= SCROLLYTELLING ================= -->
+<div id="story-anchor"></div>
+<section id="story" class="dotgrid">
+  <div class="stick">
+    <div class="wrap story-grid">
+      <div class="rail">
+        <div class="dots" id="dots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="step" data-s="0"><span class="kicker">01 — Prompt</span><h2>You ask once.</h2><p>One sentence is enough. Atelier doesn't need a perfect prompt — it needs a goal.</p></div>
+        <div class="step" data-s="1"><span class="kicker">02 — Understand</span><h2>It thinks <span class="serif">first</span>.</h2><p>The principal-mind protocol loads. It reads your codebase, traces the real flow, and batches every open question into one round — not twenty interruptions.</p></div>
+        <div class="step" data-s="2"><span class="kicker">03 — Contract</span><h2>Done is a contract.</h2><p>Before any code, Atelier writes measurable done-criteria into its SQLite store. The agent cannot claim "finished" while one box is unchecked.</p></div>
+        <div class="step" data-s="3"><span class="kicker">04 — Route</span><h2>The right brain, <span class="serif">per task</span>.</h2><p>Opus plans. Sonnet builds. Haiku digests. The expensive model thinks, the cheap model types — tokens go where they pay.</p></div>
+        <div class="step" data-s="4"><span class="kicker">05 — Gates</span><h2>Laws, not vibes.</h2><p>Every change passes the gates: design tokens only, 250 words per file, ponytail minimalism, graph impact. Fail one, and it goes back.</p></div>
+        <div class="step" data-s="5"><span class="kicker">06 — Ship</span><h2>Shipped, <span class="serif">with evidence</span>.</h2><p>The contract flips green with proof attached to every criterion. That's the whole point: not "it works" — <em>verified</em> working.</p></div>
+      </div>
+      <div class="stage">
+
+        <div class="scene" data-s="0">
+          <div class="panel tick-tl tick-br">
+            <div class="ptitle">terminal — your project</div>
+            <div class="pbody" style="min-height:170px"><span style="color:var(--accent)">›</span> <span id="type"></span><span class="caret"></span></div>
+          </div>
+        </div>
+
+        <div class="scene" data-s="1">
+          <div class="panel tick-tl tick-br">
+            <div class="ptitle">atelier · clarify — one batch, then silence</div>
+            <div class="pbody" style="font-family:Inter,sans-serif;font-size:14px">
+              <p style="color:var(--ink-3);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">Read 47 files · traced 3 flows · 4 unknowns remain</p>
+              <span class="chip" data-c="0">Dark theme only, or both?</span>
+              <span class="chip" data-c="1">Auth: sessions or JWT rotation?</span>
+              <span class="chip" data-c="2">Target stack: Next.js 15?</span>
+              <span class="chip" data-c="3">Deploy: Vercel or Cloudflare?</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene" data-s="2">
+          <div class="panel tick-tl tick-br">
+            <div class="ptitle">workspace/atelier.db — done_criteria</div>
+            <div class="pbody" style="font-family:Inter,sans-serif;font-size:14px">
+              <div class="crit" data-c="0"><span class="box"></span>Landing renders at 360 / 768 / 1280</div>
+              <div class="crit" data-c="1"><span class="box"></span>Zero hardcoded colors — tokens only</div>
+              <div class="crit" data-c="2"><span class="box"></span>Every file ≤ 250 words</div>
+              <div class="crit" data-c="3"><span class="box"></span>Lighthouse performance ≥ 95</div>
+              <div class="crit" data-c="4"><span class="box"></span>Reduced-motion fallback present</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene" data-s="3">
+          <div class="panel tick-tl tick-br">
+            <div class="ptitle">auto model routing — relative cost per token</div>
+            <div class="pbody">
+              <div class="modelrow" data-m="0"><span class="name">Opus</span><span class="role">plans</span><span class="track"><span class="fill" data-w="100"></span></span><span class="x">15×</span></div>
+              <div class="modelrow hot" data-m="1"><span class="name">Sonnet</span><span class="role">builds</span><span class="track"><span class="fill" data-w="20"></span></span><span class="x">3×</span></div>
+              <div class="modelrow" data-m="2"><span class="name">Haiku</span><span class="role">digests</span><span class="track"><span class="fill" data-w="7"></span></span><span class="x">1×</span></div>
+              <p style="font-family:Inter,sans-serif;color:var(--ink-3);font-size:12.5px;margin-top:14px">Deep thought is rented by the minute — Atelier only rents it for decisions.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene" data-s="4">
+          <div class="panel tick-tl tick-br">
+            <div class="ptitle">atelier · review gates</div>
+            <div class="pbody" style="font-family:Inter,sans-serif;font-size:14px">
+              <div class="gate" data-g="0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle class="ring" cx="12" cy="12" r="10" stroke-width="1.5"/><path class="mark" d="M7.5 12.5l3 3 6-7" stroke-width="1.5" fill="none"/></svg>Design law — tokens only, one accent</div>
+              <div class="gate" data-g="1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle class="ring" cx="12" cy="12" r="10" stroke-width="1.5"/><path class="mark" d="M7.5 12.5l3 3 6-7" stroke-width="1.5" fill="none"/></svg>Clean-code law — 250-word budget</div>
+              <div class="gate" data-g="2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle class="ring" cx="12" cy="12" r="10" stroke-width="1.5"/><path class="mark" d="M7.5 12.5l3 3 6-7" stroke-width="1.5" fill="none"/></svg>Ponytail — no speculative abstraction</div>
+              <div class="gate" data-g="3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle class="ring" cx="12" cy="12" r="10" stroke-width="1.5"/><path class="mark" d="M7.5 12.5l3 3 6-7" stroke-width="1.5" fill="none"/></svg>Graph impact — no orphaned callers</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene" data-s="5">
+          <div class="panel tick-tl tick-br">
+            <div class="ptitle">atelier · ship report</div>
+            <div class="pbody" style="font-family:Inter,sans-serif;font-size:14px">
+              <div class="crit ok in"><span class="box"></span>Landing renders at 360 / 768 / 1280</div>
+              <div class="crit ok in"><span class="box"></span>Zero hardcoded colors — tokens only</div>
+              <div class="crit ok in"><span class="box"></span>Every file ≤ 250 words</div>
+              <div class="crit ok in"><span class="box"></span>Lighthouse performance ≥ 95</div>
+              <div class="crit ok in"><span class="box"></span>Reduced-motion fallback present</div>
+              <div class="stamp" id="stamp">Shipped</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker reveal">The laws</span>
+      <h2 class="reveal" data-i="1">Taste, encoded as <span class="serif">law</span>.</h2>
+      <p class="sub reveal" data-i="2">Not prompts. Not hopes. Versioned rules the agent must obey — enforced by hooks, gates, and a knowledge graph it queries before touching your code.</p>
+    </div>
+    <div class="bento">
+      <div class="card reveal"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></span><h3>Design Law</h3><span class="tag">UI</span></div><p>Premium editorial minimalism with numbers, not vibes: one accent ≤10% of viewport, hairlines over shadows, spring physics motion. The generic "AI template look" is literally banned — with a list.</p></div>
+      <div class="card reveal" data-i="1"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></span><h3>Clean-Code Law</h3><span class="tag">Hook</span></div><p>Every source file budgeted at <code>250 words</code> — enforced by a pre-write hook, not a review comment. Bloat physically cannot land. The framework's own CI holds itself to the same cap.</p></div>
+      <div class="card reveal" data-i="2"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m13.5-6.5L14 8m-4 8l-2.5 2.5m9 0L14 16m-4-8L7.5 5.5"/><circle cx="12" cy="12" r="3.5"/></svg></span><h3>Knowledge Graph</h3><span class="tag">SQLite</span></div><p>A local <code>atelier.db</code> maps every topic to its law: ask about a bug, get principal-mind; ask about video, get the asset pipeline. Agents query it instead of guessing — zero token waste on wrong context.</p></div>
+      <div class="card reveal"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8m-4-3v3M7 9l3 3-3 3"/></svg></span><h3>Self-learning</h3><span class="tag">Learn</span></div><p>Paste a screenshot of any design you admire — <code>/atelier:learn</code> distills it into an overlay that extends the law for your project. Promote it, and it becomes permanent, git-tracked taste.</p></div>
+      <div class="card reveal" data-i="1"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="6 3 20 12 6 21"/></svg></span><h3>Media Pipeline</h3><span class="tag">Omni · Veo</span></div><p>Native image→webp compression, video frame-scrub scaffolding, and AI video generation via Gemini Omni Flash or Veo 3.1. No credentials? It degrades to a paste-ready prompt — never an error.</p></div>
+      <div class="card reveal" data-i="2"><div class="ichead"><span class="icbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><h3>MCP Registry</h3><span class="tag">Extend</span></div><p>shadcn/ui, Aceternity, ReactBits and more, queried live so components come from real registries — never hallucinated. And <code>mcp-maker</code> turns any site or API you love into a new integration.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section class="stats">
+  <div class="wrap reveal">
+    <div class="stat"><div class="n" data-n="21">0</div><div class="l">Skills</div></div>
+    <div class="stat"><div class="n" data-n="5">0</div><div class="l">Agents</div></div>
+    <div class="stat"><div class="n" data-n="2">0</div><div class="l">Hooks</div></div>
+    <div class="stat"><div class="n" data-n="250">0</div><div class="l">Word cap / file</div></div>
+    <div class="stat"><div class="n" data-n="2">0</div><div class="l">Commands to install</div></div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta">
+  <div class="wrap">
+    <span class="kicker reveal">Free · MIT · Claude Code</span>
+    <h2 class="reveal" data-i="1">Install the <span class="serif">discipline</span>.</h2>
+    <p class="reveal" data-i="2">Two commands. Every project after that starts with a principal engineer already in the room.</p>
+    <div class="cmdbox reveal" data-i="3">
+      <div class="bar" style="color:rgba(245,245,243,.4)"><i></i><i></i><i></i>&nbsp;claude code</div>
+      <button class="copy" data-copy="/plugin marketplace add INERATE/atelier
+/plugin install atelier">copy</button>
+      <div class="lines" style="color:#F5F5F3">
+        <div><span style="color:var(--accent)">&gt;</span> <b style="color:#F5F5F3">/plugin marketplace add INERATE/atelier</b></div>
+        <div><span style="color:var(--accent)">&gt;</span> <b style="color:#F5F5F3">/plugin install atelier</b></div>
+      </div>
+    </div>
+    <div class="reveal" data-i="4"><a class="btn btn-primary" href="https://github.com/INERATE/atelier">Star on GitHub</a></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="brandcol">
+      <span class="brand"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="15" height="15" stroke="var(--ink)" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" fill="var(--accent)"/></svg>ATELIER</span>
+      <span>The craftsman's framework for AI-built software.</span>
+      <span>© 2026 INERATE · MIT License · This page obeys its own design law.</span>
+    </div>
+    <div class="cols">
+      <div class="col"><b>Project</b>
+        <a href="https://github.com/INERATE/atelier">GitHub</a>
+        <a href="https://github.com/INERATE/atelier/blob/main/docs/REQUIREMENTS.md">Requirements</a>
+        <a href="https://github.com/INERATE/atelier/blob/main/docs/IMPLEMENTATION-PLAN.md">Implementation plan</a>
+      </div>
+      <div class="col"><b>Org</b>
+        <a href="https://github.com/INERATE">INERATE</a>
+        <a href="https://github.com/ScienHAC">ScienHAC</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* nav condense */
+var nav=document.getElementById("nav");
+addEventListener("scroll",function(){nav.classList.toggle("scrolled",scrollY>24)},{passive:true});
+
+/* copy buttons */
+document.querySelectorAll(".copy").forEach(function(b){
+  b.addEventListener("click",function(){
+    navigator.clipboard.writeText(b.dataset.copy).then(function(){
+      b.textContent="copied";setTimeout(function(){b.textContent="copy"},1500);
+    });
+  });
+});
+
+/* reveal on scroll */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}});
+},{threshold:.15});
+document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)});
+
+/* count-up stats */
+var so=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(!e.isIntersecting)return;so.unobserve(e.target);
+    e.target.querySelectorAll("[data-n]").forEach(function(el){
+      var end=+el.dataset.n,t0=null;
+      if(reduced){el.textContent=end;return}
+      requestAnimationFrame(function step(t){
+        if(!t0)t0=t;var p=Math.min((t-t0)/1100,1);
+        el.textContent=Math.round(end*(1-Math.pow(1-p,3)));
+        if(p<1)requestAnimationFrame(step);
+      });
+    });
+  });
+},{threshold:.4});
+document.querySelectorAll(".stats").forEach(function(el){so.observe(el)});
+
+/* ---------- scrollytelling scrub ---------- */
+if(!reduced){
+var story=document.getElementById("story"),
+    steps=document.querySelectorAll(".rail .step"),
+    scenes=document.querySelectorAll(".scene"),
+    dots=document.querySelectorAll("#dots i"),
+    typeEl=document.getElementById("type"),
+    PROMPT="make the landing page premium — and actually ship it",
+    N=6;
+
+function scrub(){
+  var r=story.getBoundingClientRect(),
+      total=r.height-innerHeight,
+      p=Math.min(Math.max(-r.top/total,0),.9999),
+      i=Math.floor(p*N),
+      sp=p*N-i;                      /* sub-progress inside scene */
+
+  steps.forEach(function(el,k){el.classList.toggle("on",k===i)});
+  scenes.forEach(function(el,k){el.classList.toggle("on",k===i)});
+  dots.forEach(function(el,k){el.classList.toggle("on",k===i)});
+
+  if(i===0) typeEl.textContent=PROMPT.slice(0,Math.round(Math.min(sp*1.5,1)*PROMPT.length));
+  if(i===1) document.querySelectorAll(".chip").forEach(function(c,k){c.classList.toggle("in",sp>.15+k*.17)});
+  if(i===2) document.querySelectorAll('.scene[data-s="2"] .crit').forEach(function(c,k){c.classList.toggle("in",sp>.1+k*.14)});
+  if(i===3) document.querySelectorAll(".modelrow .fill").forEach(function(f){
+      f.style.width=(+f.dataset.w*Math.min(sp*1.6,1))+"%"});
+  if(i===4) document.querySelectorAll(".gate .mark").forEach(function(m,k){
+      var g=Math.min(Math.max((sp-.1-k*.18)/.25,0),1);
+      m.style.strokeDashoffset=20*(1-g)});
+  if(i===5) document.getElementById("stamp").classList.toggle("in",sp>.35);
+}
+addEventListener("scroll",function(){requestAnimationFrame(scrub)},{passive:true});
+scrub();
+}else{
+/* reduced motion: show everything, checks drawn */
+document.querySelectorAll(".gate .mark").forEach(function(m){m.style.strokeDashoffset=0});
+document.querySelectorAll(".modelrow .fill").forEach(function(f){f.style.width=f.dataset.w+"%"});
+document.getElementById("type").textContent="make the landing page premium — and actually ship it";
+document.getElementById("stamp").classList.add("in");
+}
+})();
+</script>
+</body>
+</html>
